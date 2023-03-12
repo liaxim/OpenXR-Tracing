@@ -27,6 +27,8 @@
 #include <TraceLoggingActivity.h>
 #include <TraceLoggingProvider.h>
 
+#define MY_PRINTF(...) {char cad[512]; sprintf(cad, __VA_ARGS__);  OutputDebugString(cad);}
+
 namespace OXRTracing {
 
 thread_local XrInstance gXrInstance{};
@@ -43,6 +45,15 @@ static XrResult XRAPI_CALL OXRTracing_xrCreateApiLayerInstance(
     const XrInstanceCreateInfo* createInfo,
     const struct XrApiLayerCreateInfo* layerCreateInfo, XrInstance* instance)
 {
+    std::string enabledExtensions;
+	for (int i = 0; i < createInfo->enabledExtensionCount; ++i) {
+		enabledExtensions += std::string(createInfo->enabledExtensionNames[i]);
+		enabledExtensions += std::string("\t");
+	}
+	MY_PRINTF("MRM111 OXRTracing_xrCreateInstance");
+	MY_PRINTF("MRM111 %s", enabledExtensions.c_str());
+
+
 	auto nextLayerCreateInfo = *layerCreateInfo;
 	nextLayerCreateInfo.nextInfo = layerCreateInfo->nextInfo->next;
 
